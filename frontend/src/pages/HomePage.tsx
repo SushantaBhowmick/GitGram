@@ -7,11 +7,16 @@ import SuggestFriend from '../components/Home/SuggestFriend'
 const HomePage = () => {
   return (
     <div className='w-full flex'>
-        {/* <Header /> */}
         {/* sidebar */}
+        <div className=" hidden sm:block md:[8%] lg:w-[20%]">
         <Sidebar />
+        </div>
+        <div className="w-full lg:w-[50%]">
         <Content />
+        </div>
+        <div className="hidden lg:block">
         <SuggestFriend />
+        </div>
 
     </div>
   )

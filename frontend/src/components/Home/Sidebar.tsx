@@ -13,11 +13,11 @@ const Sidebar = () => {
   const [active, setActive] = useState(1);
 
   return (
-    <div className="w-[12%] border-r h-screen md:w-[20%]">
+    <div className="border-r border-gray-400 h-screen">
       <div className="py-10 pl-5">
-        <h1 className=" text-[0] md:text-[25px] md:font-[700]">GitGram</h1>
+        <h1 className=" text-[0] lg:text-[25px] md:font-[700]">GitGram</h1>
         <div>
-        <FaGithub className="size-7 md:size-0" />
+        <FaGithub className="size-7 lg:size-0" />
         </div>
       </div>
 
@@ -28,14 +28,14 @@ const Sidebar = () => {
           className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===1 && "text-[red]"}`}
         >
           <RiHomeHeartFill size={35} />
-          <span className=" text-[0px] md:text-[18px]">
+          <span className=" text-[0px] lg:text-[18px]">
           Home
           </span>
         </Link>
 
         <div className="flex items-center text-[18px] font-[500] gap-4 pl-5">
           <IoSearch size={35} />
-          <span className=" text-[0px] md:text-[18px]" >
+          <span className=" text-[0px] lg:text-[18px]" >
           Search
           </span>
         </div>
@@ -46,7 +46,7 @@ const Sidebar = () => {
           className="flex items-center text-[18px] font-[500] gap-4 pl-5"
         >
           <MdExplore size={35} />
-          <span className=" text-[0px] md:text-[18px]" >
+          <span className=" text-[0px] lg:text-[18px]" >
           Explore
           </span>
         </Link>
@@ -56,7 +56,7 @@ const Sidebar = () => {
           className="flex items-center text-[18px] font-[500] gap-4 pl-5"
         >
           <MdOutlineVideogameAsset size={35} />
-          <span className=" text-[0px] md:text-[18px]" >
+          <span className=" text-[0px] lg:text-[18px]" >
           Reels
           </span>
         </Link>
@@ -65,7 +65,7 @@ const Sidebar = () => {
           className="flex items-center text-[18px] font-[500] gap-4 pl-5"
         >
           <BiMessageRoundedDetail size={35} />
-          <span className=" text-[0px] md:text-[18px]" >
+          <span className=" text-[0px] lg:text-[18px]" >
           Messages
           </span>
         </Link>
@@ -74,7 +74,7 @@ const Sidebar = () => {
           className="flex items-center text-[18px] font-[500] gap-4 pl-5"
         >
           <MdOutlineEditNotifications size={35} />
-          <span className=" text-[0px] md:text-[18px]" >
+          <span className=" text-[0px] lg:text-[18px]" >
           Notification
           </span>
         </Link>
@@ -85,14 +85,14 @@ const Sidebar = () => {
           className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===6 && "text-[red]"}`}
         >
           <RxAvatar size={35} />
-          <span className=" text-[0px] md:text-[18px]" >
+          <span className=" text-[0px] lg:text-[18px]" >
           Profile
           </span>
         </Link>
 
         <div className="flex items-center text-[18px] font-[500] gap-4 pl-5">
           <ModeToggle />
-          <span className=" text-[0px] md:text-[18px]" >
+          <span className=" text-[0px] lg:text-[18px]" >
           Color Mode
           </span>
         </div>
