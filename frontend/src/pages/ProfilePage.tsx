@@ -1,4 +1,3 @@
-import React from 'react'
 import Sidebar from '../components/Home/Sidebar'
 import ProfileContent from '../components/Profile/ProfileContent.tsx'
 
