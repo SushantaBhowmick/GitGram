@@ -14,7 +14,7 @@ import { TbMessageCirclePlus } from "react-icons/tb";
 const Posts = () => {
   return (
     <div className="w-[100%] flex justify-center py-3">
-      <div className="w-[70%]">
+      <div className="w-[80%] md:w-[70%]">
         {/* post card */}
 
         <div className="w-full">
@@ -52,7 +52,7 @@ const Posts = () => {
           <div className="">
           <img
             src="https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg"
-            className="h-[600px] w-full rounded-sm"
+            className="h-[500px] w-full rounded-sm"
             alt=""
           />
         </div>
@@ -104,7 +104,7 @@ const Posts = () => {
           <div className="">
           <img
             src="https://images.pexels.com/photos/1391499/pexels-photo-1391499.jpeg?cs=srgb&dl=pexels-tu%E1%BA%A5n-ki%E1%BB%87t-jr-1391499.jpg&fm=jpg"
-            className="h-[600px] w-full rounded-sm"
+            className="h-[500px] w-full rounded-sm"
             alt=""
           />
         </div>
@@ -156,7 +156,7 @@ const Posts = () => {
           <div className="">
           <img
             src="https://i.pinimg.com/474x/5a/93/b0/5a93b0c36ba7cd5399c9293db71b2663.jpg"
-            className="h-[600px] w-full rounded-sm"
+            className="h-[500px] w-full rounded-sm"
             alt=""
           />
         </div>

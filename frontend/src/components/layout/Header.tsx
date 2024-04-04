@@ -68,14 +68,14 @@ const ref = useRef<null | HTMLDivElement>(null);
 
   return (
    <div className='w-full flex justify-center relative  '>
-      <div onClick={() => handleScroll(-500)} style={{ cursor: "pointer" }} className=' absolute left-3 sm:left-6 md:left-[90px] z-50 top-12 bg-white rounded-full'>
+      <div onClick={() => handleScroll(-500)} style={{ cursor: "pointer" }} className=' absolute left-5  md:left-[60px] z-50 top-8 md:top-12 bg-white rounded-full'>
           <GrFormPrevious color='black' size={24}/>
         </div>
-     <div className='flex w-[80%] overflow-x-hidden relative' ref={ref}  >
+     <div className='flex w-[90%] md:w-[85%] overflow-x-hidden relative' ref={ref}  >
       {
         users && users.map((i,index)=>(
           <Link to={`/${i.id}`} className='flex flex-col items-center py-5 pr-4' key={index}>
-            <div className=' rounded-full w-[50px] h-[50px] md:w-[80px] md:h-[80px]'>
+            <div className=' rounded-full w-[40px] h-[40px] md:w-[80px] md:h-[80px]'>
             <img src={i.image} alt="" className=' rounded-full'/>
             </div>
             <span className='text-center text-[15px]'>{
@@ -86,7 +86,7 @@ const ref = useRef<null | HTMLDivElement>(null);
       }
     </div>
    
-        <div onClick={() => handleScroll(500)} style={{ cursor: "pointer" }} className=' absolute right-3 sm:right-6 md:right-[90px] z-50 top-12 bg-white rounded-full'>
+        <div onClick={() => handleScroll(500)} style={{ cursor: "pointer" }} className=' absolute right-5 md:right-[60px] z-50 top-8 md:top-12 bg-white rounded-full'>
         <MdNavigateNext color='black' size={24} />
         </div>
    </div>

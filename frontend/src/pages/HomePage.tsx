@@ -7,10 +7,10 @@ const HomePage = () => {
   return (
     <div className='w-full flex'>
         {/* sidebar */}
-        <div className=" hidden sm:block md:[8%] lg:w-[20%]">
+        <div className=" hidden sm:block md:w-[8%] lg:w-[18%]">
         <Sidebar />
         </div>
-        <div className="w-full lg:w-[50%]">
+        <div className="w-full sm:w-[88%] md:w-[92%] lg:w-[52%]">
         <Content />
         </div>
         <div className="hidden lg:block">
