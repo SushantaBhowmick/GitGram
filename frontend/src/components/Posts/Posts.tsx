@@ -13,11 +13,11 @@ import { TbMessageCirclePlus } from "react-icons/tb";
 
 const Posts = () => {
   return (
-    <div className="w-[100%] flex justify-center py-3">
+    <div className="w-[100%] flex justify-center py-3 mb-12">
       <div className="w-[80%] md:w-[70%]">
         {/* post card */}
 
-        <div className="w-full">
+        <div className="w-full border-b">
           {/* name and options */}
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3">
@@ -52,7 +52,7 @@ const Posts = () => {
           <div className="">
           <img
             src="https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg"
-            className="h-[500px] w-full rounded-sm"
+            className="h-[400px] md:h-[500px] w-full rounded-sm"
             alt=""
           />
         </div>
@@ -69,7 +69,7 @@ const Posts = () => {
           <h1 className=" text-[18px] font-bold py-2">256 Likes</h1>
         </div>
 
-        <div className="w-full">
+        <div className="w-full border-b">
           {/* name and options */}
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ const Posts = () => {
           <div className="">
           <img
             src="https://images.pexels.com/photos/1391499/pexels-photo-1391499.jpeg?cs=srgb&dl=pexels-tu%E1%BA%A5n-ki%E1%BB%87t-jr-1391499.jpg&fm=jpg"
-            className="h-[500px] w-full rounded-sm"
+            className="h-[400px] md:h-[500px] w-full rounded-sm"
             alt=""
           />
         </div>
@@ -121,7 +121,7 @@ const Posts = () => {
           <h1 className=" text-[18px] font-bold py-2">256 Likes</h1>
         </div>
 
-        <div className="w-full">
+        <div className="w-full border-b">
           {/* name and options */}
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3">
@@ -156,7 +156,7 @@ const Posts = () => {
           <div className="">
           <img
             src="https://i.pinimg.com/474x/5a/93/b0/5a93b0c36ba7cd5399c9293db71b2663.jpg"
-            className="h-[500px] w-full rounded-sm"
+            className="h-[400px] md:h-[500px] w-full rounded-sm"
             alt=""
           />
         </div>
@@ -172,8 +172,6 @@ const Posts = () => {
           </div>
           <h1 className=" text-[18px] font-bold py-2">256 Likes</h1>
         </div>
-
-       
       </div>
     </div>
   );

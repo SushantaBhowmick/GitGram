@@ -68,7 +68,7 @@ const ref = useRef<null | HTMLDivElement>(null);
 
   return (
    <div className='w-full flex justify-center relative  '>
-      <div onClick={() => handleScroll(-500)} style={{ cursor: "pointer" }} className=' absolute left-5  md:left-[60px] z-50 top-8 md:top-12 bg-white rounded-full'>
+      <div onClick={() => handleScroll(-500)} style={{ cursor: "pointer" }} className=' absolute left-5  md:left-[60px] z-40 top-8 md:top-12 bg-white rounded-full'>
           <GrFormPrevious color='black' size={24}/>
         </div>
      <div className='flex w-[90%] md:w-[85%] overflow-x-hidden relative' ref={ref}  >
@@ -86,7 +86,7 @@ const ref = useRef<null | HTMLDivElement>(null);
       }
     </div>
    
-        <div onClick={() => handleScroll(500)} style={{ cursor: "pointer" }} className=' absolute right-5 md:right-[60px] z-50 top-8 md:top-12 bg-white rounded-full'>
+        <div onClick={() => handleScroll(500)} style={{ cursor: "pointer" }} className=' absolute right-5 md:right-[60px] z-40 top-8 md:top-12 bg-white rounded-full'>
         <MdNavigateNext color='black' size={24} />
         </div>
    </div>

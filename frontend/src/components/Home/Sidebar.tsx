@@ -10,10 +10,10 @@ import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
 
 const Sidebar = () => {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState<number>(1);
 
   return (
-    <div className="border-r border-gray-400 h-screen  overflow-auto">
+    <div className="border-r border-gray-400 h-screen  overflow-auto ">
       <div className="py-10 pl-5">
         <h1 className=" text-[0] lg:text-[25px] md:font-[700]">GitGram</h1>
         <div>
@@ -61,11 +61,12 @@ const Sidebar = () => {
           </span>
         </Link>
         <Link
+        onClick={() => setActive(5)}
           to={"/message"}
-          className="flex items-center text-[18px] font-[500] gap-4 pl-5"
+          className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===5 && "text-[red]"}`}
         >
           <BiMessageRoundedDetail size={35} />
-          <span className=" text-[0px] lg:text-[18px]" >
+          <span className={`text-[0px] lg:text-[18px]`} >
           Messages
           </span>
         </Link>
@@ -80,9 +81,9 @@ const Sidebar = () => {
         </Link>
 
         <Link
-          onClick={() => setActive(6)}
+          onClick={() => setActive(7)}
           to={"/profile"}
-          className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===6 && "text-[red]"}`}
+          className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===7 && "text-[red]"}`}
         >
           <RxAvatar size={35} />
           <span className=" text-[0px] lg:text-[18px]" >
@@ -98,6 +99,10 @@ const Sidebar = () => {
         </div>
       </div>
     </div>
+
+// mobile sidebar
+
+
   );
 };
 

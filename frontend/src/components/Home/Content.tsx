@@ -7,7 +7,7 @@ const Content = () => {
     <div className='h-screen overflow-y-scroll relative'>
       <Header />
       <Posts />
-      <div className='fixed bottom-5 right-10'>
+      <div className='fixed bottom-14 right-2'>
         <ModeToggle />
       </div>
     </div>
