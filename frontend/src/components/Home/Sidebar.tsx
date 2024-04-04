@@ -13,7 +13,7 @@ const Sidebar = () => {
   const [active, setActive] = useState(1);
 
   return (
-    <div className="border-r border-gray-400 h-screen">
+    <div className="border-r border-gray-400 h-screen  overflow-auto">
       <div className="py-10 pl-5">
         <h1 className=" text-[0] lg:text-[25px] md:font-[700]">GitGram</h1>
         <div>
