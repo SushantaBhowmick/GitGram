@@ -11,7 +11,23 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
   try {
     const { name, email, password, username } = req.body;
     const userEmail = await User.findOne({ email });
+    const userName = await User.findOne({ username });
+
     if (userEmail) {
+      const fileName = req.file.filename;
+      const filePath = `uploads/${fileName}`;
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          return res.status(500).json({
+            error: err.message,
+            message: "Deleting file...",
+          });
+        }
+      });
+      return next(new ErrorHandler("User email already exists", 400));
+    }
+
+    if (userName) {
       const fileName = req.file.filename;
       const filePath = `uploads/${fileName}`;
       fs.unlink(filePath, (err) => {
@@ -21,7 +37,7 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
           });
         }
       });
-      return next(new ErrorHandler("User already exists", 404));
+      return next(new ErrorHandler("username already exists", 404));
     }
 
     const fileName = req.file.filename;
@@ -49,6 +65,27 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
         success: true,
         message: `Please check your email: ${user.email} to activate your account!`,
       });
+
+      // if user is not verified
+      setTimeout(async () => {
+        try {
+            const user = await User.findOne({ email });
+            if (!user) {
+              const fileName = req.file.filename;
+                const filePath = `uploads/${fileName}`;
+                
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                    }
+                    console.log('Image deleted for unverified user:');
+                });
+            }
+        } catch (error) {
+            console.error('Error deleting image:', error);
+        }
+    }, 5 * 60 * 1000); // Delete image after 5 minutes
+
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -82,9 +119,45 @@ exports.activationAccount = catchAsyncErrors(async (req, res, next) => {
       avatar,
     });
 
-    sendToken(user,201,res,"Account activated successfully!")
-
+    sendToken(user, 201, res, "Account activated successfully!");
+    
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
 });
+
+// login
+exports.login = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { emailOrUsername, password } = req.body;
+
+    const user = await User.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+    }).select("+password");
+
+    if (!user) {
+      return next(new ErrorHandler("User doesn't exists", 400));
+    }
+    const isMatched = await user.comparePassword(password);
+    if (!isMatched) {
+      return next(new ErrorHandler("Invalid credentials", 400));
+    }
+    sendToken(user, 200, res, `Welcome back ${user.name}`);
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+exports.getUser=catchAsyncErrors(async(req,res,next)=>{
+ try {
+  const {id} = req.user;
+  const user = await User.findById(id);
+  res.status(200).json({
+    success:true,
+    user
+  })
+
+ } catch (error) {
+  return next(new ErrorHandler(error.message, 500));
+ }
+})
