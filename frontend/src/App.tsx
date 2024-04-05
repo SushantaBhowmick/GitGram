@@ -10,15 +10,13 @@ import LoginPage from './pages/AuthPage/LoginPage.tsx'
 import Register from './pages/AuthPage/Register.tsx'
 
 function App() {
-  const isLogin=false;
 
   return (
   <>
   <Router>
-  {isLogin && 
   <div className='fixed top-0 block sm:hidden w-full z-50'>
   <MobileHeader />
-</div>}
+</div>
     <Routes>
       <Route  path='/' element={<HomePage />}  />
       <Route  path='/profile' element={<ProfilePage />}  />
@@ -27,12 +25,11 @@ function App() {
       <Route  path='/register' element={<Register />}  />
     </Routes>
       {/* Mobile Sidebar */}
-     {
-      isLogin &&
+
       <div className='fixed bottom-0 block sm:hidden w-full'>
       <MobileSidebar />
     </div>
-     }
+     
   </Router>
   </>
   )
