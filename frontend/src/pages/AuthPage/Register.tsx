@@ -1,3 +1,4 @@
+import React from 'react';
 import { FaFacebook, FaGithub, FaLongArrowAltRight } from "react-icons/fa";
 import { Button } from "../../@/components/ui/button";
 import { Input } from "../../@/components/ui/input";
@@ -7,14 +8,15 @@ import { useState } from "react";
 
 const Register = () => {
 
-    const [avatar,setAvatar]=useState(null)
-    const handleInputChange =(e)=>{
+    const [avatar, setAvatar] = useState<File | null>(null);
+
+    const handleInputChange =(e: React.ChangeEvent<HTMLInputElement>)=>{
         console.log(e)
-        const file = e.target.files[0]
+        const file = e.target.files && e.target.files[0];
         setAvatar(file)
     }
 
-  const loginHandler = async (e) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
   return (
@@ -28,17 +30,17 @@ const Register = () => {
         </div>
         <form
           action=""
-          onSubmit={loginHandler}
+          onSubmit={submitHandler}
           className="flex flex-col gap-7 justify-center items-center w-[80%] sm:w-[60%] md:w-[30%]"
         >
             <div className="flex flex-col items-center justify-center">
                {
                 avatar? (
-                   <div className=" w-[150px] h-[150px] md:w-[200px] md:h-[200px]">
-                     <img src={URL.createObjectURL(avatar)} alt="" className=" w-full h-full rounded-full object-cover" />
+                   <div className=" w-[150px] h-[150px] md:w-[200px] md:h-[200px] mb-3">
+                     <img src={URL.createObjectURL(avatar)} alt="" className="w-full h-full rounded-full object-cover" />
                    </div>
                 ):(
-                    <RxAvatar size={200} id="img"  />
+                    <RxAvatar  className=' size-[150px] md:size-[200px]' id="img"  />
                 )
                }
                 <label htmlFor="file-input"

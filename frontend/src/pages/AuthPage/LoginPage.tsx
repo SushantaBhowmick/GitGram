@@ -4,9 +4,9 @@ import { Input } from "../../@/components/ui/input";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
-  const loginHandler = async (e) => {
-    e.preventDefault();
-  };
+    const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+      };
   return (
     <div>
         
