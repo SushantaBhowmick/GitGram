@@ -53,7 +53,7 @@ const MobileSidebar = () => {
 
         <Link
           onClick={() => setActive(6)}
-          to={"/profile"}
+          to={"/login"}
           className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===6 ? "text-[red]":"text-white"}`}
 
         >

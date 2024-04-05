@@ -8,6 +8,7 @@ import { BiMessageRoundedDetail } from "react-icons/bi";
 import { RxAvatar } from "react-icons/rx";
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
+import { Button } from "../../@/components/ui/button";
 
 const Sidebar = () => {
   const [active, setActive] = useState<number>(1);
@@ -96,6 +97,12 @@ const Sidebar = () => {
           <span className=" text-[0px] lg:text-[18px]" >
           Color Mode
           </span>
+        </div>
+
+        <div className="flex gap-2 justify-center bottom-2 ml-3 md:ml-5 absolute">
+          <Link to={'/login'}>
+          <Button className=" sm:w-[50px] md:w-[50px] xl:w-[150px] 2xl:w-[250px]">Login</Button>
+          </Link>
         </div>
       </div>
     </div>
