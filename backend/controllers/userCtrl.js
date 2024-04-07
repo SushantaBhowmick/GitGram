@@ -24,36 +24,28 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
     const userName = await User.findOne({ username });
 
     if (userEmail) {
-      try {
-        const key = req.file.location;
-      const params = {
+    
+        const key = req.file.key;
+        const params = {
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: key,
         };
         await s3.send(new DeleteObjectCommand(params));
-        res.status(200).json({ message: 'Object deleted successfully' });
         console.log("Object deleted successfully")
-      } catch (error) {
-        console.log(error)
-          res.status(500).json({ message: 'Deletion Failed' });
-      }
+
       return next(new ErrorHandler("User email already exists", 400));
     }
 
     if (userName) {
-      try {
-        const key = req.file.location;
-      const params = {
+      
+        const key = req.file.key;
+        const params = {
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: key,
         };
         await s3.send(new DeleteObjectCommand(params));
-        res.status(200).json({ message: 'Object deleted successfully' });
         console.log("Object deleted successfully")
-      } catch (error) {
-        console.log(error)
-          res.status(500).json({ message: 'Deletion Failed' });
-      }
+
       return next(new ErrorHandler("username already exists", 404));
     }
 
@@ -83,19 +75,21 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
       // if user is not verified
       setTimeout(async () => {
         try {
-          const key = req.file.location;
-          const params = {
-                Bucket: process.env.AWS_BUCKET_NAME,
-                Key: key,
-            };
-            await s3.send(new DeleteObjectCommand(params));
-            res.status(200).json({ message: 'Object deleted successfully' });
-            console.log("Object deleted successfully")
+          const user = await User.findOne({email})
+          if(!user){
+            const key = req.file.key;
+            const params = {
+                  Bucket: process.env.AWS_BUCKET_NAME,
+                  Key: key,
+              };
+              await s3.send(new DeleteObjectCommand(params));
+              console.log("Object deleted successfully")
+          }
         } catch (error) {
           console.log(error)
           res.status(500).json({ message: 'Upload failed' });
         }
-    }, 2 * 60 * 1000); // Delete image after 5 minutes
+    }, 5 * 60 * 1000); // Delete image after 5 minutes
 
     } catch (error) {
       console.log(error)
@@ -112,6 +106,7 @@ const createActivationToken = (user) => {
     expiresIn: "5m",
   });
 };
+
 exports.activationAccount = catchAsyncErrors(async (req, res, next) => {
   try {
     const { activation_token } = req.body;
