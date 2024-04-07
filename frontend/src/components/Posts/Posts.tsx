@@ -50,10 +50,14 @@ const Posts = () => {
           </div>
           {/* post images */}
           <div className="">
-          <img
-            src="https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg"
+          {/* <img
+            src="https://gitgram.s3.ap-south-1.amazonaws.com/dp.jpeg"
             className="h-[400px] md:h-[500px] w-full rounded-sm"
             alt=""
+          /> */}
+          <video
+            src="https://gitgram.s3.ap-south-1.amazonaws.com/sample.mp4"
+            className="h-[400px] md:h-[500px] w-full rounded-sm"
           />
         </div>
           <div className="flex justify-between mt-0 py-2">

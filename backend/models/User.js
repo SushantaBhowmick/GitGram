@@ -56,6 +56,12 @@ const userSchema = new mongoose.Schema(
         type:String,
         default:"user"
       },
+    //   facebook: {
+    //     id: String,
+    //     token: String,
+    //     email: String,
+    //     name: String
+    // },
       resetPasswordToken: String,
       resetPasswordExpire: Date
   },

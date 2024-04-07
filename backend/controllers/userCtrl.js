@@ -6,6 +6,16 @@ const sendMail = require("../utils/sendMail");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const sendToken = require("../utils/sendToken");
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+
+// s3 upload
+const s3 = new S3Client({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 exports.register = catchAsyncErrors(async (req, res, next) => {
   try {
@@ -14,41 +24,45 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
     const userName = await User.findOne({ username });
 
     if (userEmail) {
-      const fileName = req.file.filename;
-      const filePath = `uploads/${fileName}`;
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          return res.status(500).json({
-            error: err.message,
-            message: "Deleting file...",
-          });
-        }
-      });
+      try {
+        const key = req.file.location;
+      const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: key,
+        };
+        await s3.send(new DeleteObjectCommand(params));
+        res.status(200).json({ message: 'Object deleted successfully' });
+        console.log("Object deleted successfully")
+      } catch (error) {
+        console.log(error)
+          res.status(500).json({ message: 'Deletion Failed' });
+      }
       return next(new ErrorHandler("User email already exists", 400));
     }
 
     if (userName) {
-      const fileName = req.file.filename;
-      const filePath = `uploads/${fileName}`;
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          return res.status(500).json({
-            message: "Deleting file...",
-          });
-        }
-      });
+      try {
+        const key = req.file.location;
+      const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: key,
+        };
+        await s3.send(new DeleteObjectCommand(params));
+        res.status(200).json({ message: 'Object deleted successfully' });
+        console.log("Object deleted successfully")
+      } catch (error) {
+        console.log(error)
+          res.status(500).json({ message: 'Deletion Failed' });
+      }
       return next(new ErrorHandler("username already exists", 404));
     }
-
-    const fileName = req.file.filename;
-    const fileUri = path.join(fileName);
 
     const user = {
       name: name,
       email: email,
       password: password,
       username: username,
-      avatar: fileUri,
+      avatar: req.file.location,
     };
 
     const activationToken = createActivationToken(user);
@@ -69,27 +83,26 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
       // if user is not verified
       setTimeout(async () => {
         try {
-            const user = await User.findOne({ email });
-            if (!user) {
-              const fileName = req.file.filename;
-                const filePath = `uploads/${fileName}`;
-                
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error('Error deleting file:', err);
-                    }
-                    console.log('Image deleted for unverified user:');
-                });
-            }
+          const key = req.file.location;
+          const params = {
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: key,
+            };
+            await s3.send(new DeleteObjectCommand(params));
+            res.status(200).json({ message: 'Object deleted successfully' });
+            console.log("Object deleted successfully")
         } catch (error) {
-            console.error('Error deleting image:', error);
+          console.log(error)
+          res.status(500).json({ message: 'Upload failed' });
         }
-    }, 5 * 60 * 1000); // Delete image after 5 minutes
+    }, 2 * 60 * 1000); // Delete image after 5 minutes
 
     } catch (error) {
+      console.log(error)
       return next(new ErrorHandler(error.message, 500));
     }
   } catch (error) {
+    console.log(error)
     return next(new ErrorHandler(error.message, 500));
   }
 });
