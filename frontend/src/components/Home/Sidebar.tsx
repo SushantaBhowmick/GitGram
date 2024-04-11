@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ModeToggle } from "../ModeToggle";
 import { RiHomeHeartFill } from "react-icons/ri";
 import { IoSearch } from "react-icons/io5";
@@ -9,9 +9,25 @@ import { RxAvatar } from "react-icons/rx";
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
 import { Button } from "../../@/components/ui/button";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import axios from "axios";
+import baseUrl from "../../service/service";
+import { toast } from "react-toastify";
 
 const Sidebar = () => {
   const [active, setActive] = useState<number>(1);
+  const {isAuthenticated} = useSelector((state: RootState) => state.user);
+  const navigate= useNavigate()
+
+  const logoutHandler=async()=>{
+    await axios.get(`${baseUrl}/user/logout`,{withCredentials:true})
+    .then((res)=>{
+      toast.success(res.data.message)
+        navigate('/login') 
+        window.location.reload()     
+    })
+  }
 
   return (
     <div className="border-r border-gray-400 h-screen  overflow-auto ">
@@ -99,11 +115,17 @@ const Sidebar = () => {
           </span>
         </div>
 
-        <div className="flex gap-2 justify-center bottom-2 ml-3 md:ml-5 absolute">
+        {
+          !isAuthenticated ?
+          <div className="flex gap-2 justify-center bottom-2 ml-3 md:ml-5 absolute">
           <Link to={'/login'}>
           <Button className=" sm:w-[50px] md:w-[50px] xl:w-[150px] 2xl:w-[250px]">Login</Button>
           </Link>
+        </div> :
+        <div className="flex gap-2 justify-center bottom-2 ml-3 md:ml-5 absolute">
+          <Button onClick={logoutHandler} className=" sm:w-[50px] md:w-[50px] xl:w-[150px] 2xl:w-[250px]">Logout</Button>
         </div>
+        }
       </div>
     </div>
 

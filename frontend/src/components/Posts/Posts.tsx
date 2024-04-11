@@ -10,8 +10,47 @@ import { CiMenuKebab } from "react-icons/ci";
 import { MdSaveAlt } from "react-icons/md";
 import { FaRegHeart, FaShareSquare } from "react-icons/fa";
 import { TbMessageCirclePlus } from "react-icons/tb";
+import { useEffect, useRef, useState } from "react";
 
 const Posts = () => {
+
+  const [isInView, setIsInView] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5, // Adjust this threshold as needed
+      }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isInView) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isInView]);
+
   return (
     <div className="w-[100%] flex justify-center py-3 mb-12">
       <div className="w-[80%] md:w-[70%]">
@@ -56,9 +95,15 @@ const Posts = () => {
             alt=""
           /> */}
           <video
+           ref={videoRef}
+          controls
             src="https://gitgram.s3.ap-south-1.amazonaws.com/sample.mp4"
             className="h-[400px] md:h-[500px] w-full rounded-sm"
+            autoPlay
+            controlsList="nodownload noremoteplayback"
+            loop
           />
+         
         </div>
           <div className="flex justify-between mt-0 py-2">
             <div className="flex gap-4">

@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaFacebook, FaGithub, FaLongArrowAltRight } from "react-icons/fa";
 import { Button } from "../../@/components/ui/button";
 import { Input } from "../../@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import { useState } from "react";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
 
 const Register = () => {
 
     const [avatar, setAvatar] = useState<File | null>(null);
+    const {isAuthenticated} = useSelector((state: RootState) => state.user);
+const navigate = useNavigate()
 
     const handleInputChange =(e: React.ChangeEvent<HTMLInputElement>)=>{
         console.log(e)
@@ -19,6 +23,13 @@ const Register = () => {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
+
+useEffect(()=>{
+  if(isAuthenticated){
+    navigate('/')
+    console.log("first")
+  }
+},[isAuthenticated,navigate])
   return (
     <div>
         
