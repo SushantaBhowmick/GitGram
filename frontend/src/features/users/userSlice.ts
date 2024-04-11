@@ -31,13 +31,23 @@ export const loginUser=createAsyncThunk<User,{emailOrUsername:string;password:st
     }
 )
 
+
 export const loadUser=createAsyncThunk<User>(
     'user/loadUser',async()=>{
         const response = await axios.get<User>(`${baseUrl}/user/me`,{withCredentials:true});
         return response.data;
     }
-)
-
+    )
+    
+export const registerUser=createAsyncThunk<User,FormData>(
+        'user/registerUser',async(formData)=>{
+            const config = {
+                headers: { "Content-Type": "multipart/form-data" }
+              }
+            const response = await axios.post<User>(`${baseUrl}/user/register`,formData,config);
+            return response.data;
+        }
+    )
 
 const userSlice = createSlice({
     name:'user',
@@ -81,6 +91,20 @@ const userSlice = createSlice({
         .addCase(loadUser.rejected,(state)=>{
             state.loading = false;
             state.isAuthenticated=false;
+            state.error = "Please login to access this resource";
+        })
+        .addCase(registerUser.pending,(state)=>{ //register user
+            state.loading=true;
+            state.error = null;
+            state.message=null;
+        })
+        .addCase(registerUser.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.user=action.payload;
+            state.message= action.payload.message ||"Check your Email"
+        })
+        .addCase(registerUser.rejected,(state)=>{
+            state.loading = false;
             state.error = "Please login to access this resource";
         })
     },
