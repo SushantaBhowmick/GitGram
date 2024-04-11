@@ -53,7 +53,7 @@ const Posts = () => {
 
   return (
     <div className="w-[100%] flex justify-center py-3 mb-12">
-      <div className="w-[80%] md:w-[70%]">
+      <div className="w-[98%] md:w-[90%]">
         {/* post card */}
 
         <div className="w-full border-b">
@@ -99,7 +99,8 @@ const Posts = () => {
           controls
             src="https://gitgram.s3.ap-south-1.amazonaws.com/sample.mp4"
             className="h-[400px] md:h-[500px] w-full rounded-sm"
-            autoPlay
+            // autoPlay
+            muted
             controlsList="nodownload noremoteplayback"
             loop
           />

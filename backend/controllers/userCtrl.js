@@ -46,7 +46,7 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
         await s3.send(new DeleteObjectCommand(params));
         console.log("Object deleted successfully")
 
-      return next(new ErrorHandler("username already exists", 404));
+      return next(new ErrorHandler("username already exists", 400));
     }
 
     const user = {

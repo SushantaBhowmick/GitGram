@@ -103,9 +103,9 @@ const userSlice = createSlice({
             state.user=action.payload;
             state.message= action.payload.message ||"Check your Email"
         })
-        .addCase(registerUser.rejected,(state)=>{
+        .addCase(registerUser.rejected,(state,action)=>{
             state.loading = false;
-            state.error = "Please login to access this resource";
+            state.error = action.error.message || "an error occurd";
         })
     },
 })
