@@ -78,7 +78,7 @@ export const loadUser = createAsyncThunk("user/loadUser",
 
     
 export const registerUser=createAsyncThunk(
-        'user/registerUser',async(formData,{rejectWithValue})=>{
+        'user/registerUser',async(formData:FormData,{rejectWithValue})=>{
           try {
             const config = {
                 headers: { "Content-Type": "multipart/form-data" }
