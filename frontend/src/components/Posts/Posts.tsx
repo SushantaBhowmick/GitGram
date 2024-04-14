@@ -53,7 +53,7 @@ const Posts = () => {
 
   return (
     <div className="w-[100%] flex justify-center py-3 mb-12">
-      <div className="w-[98%] md:w-[90%]">
+      <div className="w-[98%] md:w-[75%]">
         {/* post card */}
 
         <div className="w-full border-b">

@@ -4,50 +4,99 @@ import baseUrl from "../../service/service";
 
 interface User {
     emailOrUsername:string;
-    password:string;
-    message:string;
+    avatar:string;
+    username:string;
+    name:string;
 }
 
 interface UserState{
-    user:User|null;
-    loading:boolean;
-    isAuthenticated:boolean;
-    message: string|null;
-    error:string|null;
+    isAuthenticated: boolean;
+    loading: boolean;
+    user?: User | null; // Update this with your user type
+    error?: string | null;
+    message?: string | null;
 }
+
+interface LoginCredentials {
+    emailOrUsername: string;
+    password: string;
+  }
 
 const initialState:UserState={
-    user:null,
-    loading:true,
+    loading:false,
     isAuthenticated:false,
-    message:null,
-    error:null,
 }
 
-export const loginUser=createAsyncThunk<User,{emailOrUsername:string;password:string}>(
-    'user/loginUser',async({emailOrUsername,password})=>{
-        const response = await axios.post<User>(`${baseUrl}/user/login`,{emailOrUsername,password},{withCredentials:true});
-        return response.data;
-    }
-)
+export const loginUser = createAsyncThunk("user/loginUser",
+    async({emailOrUsername,password}:LoginCredentials,{rejectWithValue})=>{
+        try {
+            const {data}=await axios.post(`${baseUrl}/user/login`,{emailOrUsername,password},{withCredentials:true});
+            console.log(data)
+            return data;
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+              if (error.response && error.response.data && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+              }
+              return rejectWithValue("An unknown error occurred");
+            }
+            // Handle non-Axios errors here
+            return rejectWithValue("An unknown error occurred");
+          }
+        }
+      );
 
+// load user thunk
+export const loadUser = createAsyncThunk("user/loadUser",
+    async(_,{rejectWithValue})=>{
+        try {
+            const {data}=await axios.get(`${baseUrl}/user/me`,{withCredentials:true});
+            return data;
+        }catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+              if (error.response && error.response.data && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+              }
+              return rejectWithValue("An unknown error occurred");
+            }
+            // Handle non-Axios errors here
+            return rejectWithValue("An unknown error occurred");
+          }
+        }
+      );
 
-export const loadUser=createAsyncThunk<User>(
-    'user/loadUser',async()=>{
-        const response = await axios.get<User>(`${baseUrl}/user/me`,{withCredentials:true});
-        return response.data;
-    }
-    )
+    // another way
+// export const registerUser=createAsyncThunk(
+//         'user/registerUser',async(formData)=>{
+//             const config = {
+//                 headers: { "Content-Type": "multipart/form-data" }
+//               }
+//             const response = await axios.post<User>(`${baseUrl}/user/register`,formData,config);
+//             return response.data;
+//         }
+//     )
+
     
-export const registerUser=createAsyncThunk<User,FormData>(
-        'user/registerUser',async(formData)=>{
+export const registerUser=createAsyncThunk(
+        'user/registerUser',async(formData,{rejectWithValue})=>{
+          try {
             const config = {
                 headers: { "Content-Type": "multipart/form-data" }
               }
-            const response = await axios.post<User>(`${baseUrl}/user/register`,formData,config);
-            return response.data;
+            const {data} = await axios.post(`${baseUrl}/user/register`,formData,config);
+            return data;
+          } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+              if (error.response && error.response.data && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+              }
+              return rejectWithValue("An unknown error occurred");
+            }
+            // Handle non-Axios errors here
+            return rejectWithValue("An unknown error occurred");
+          }
         }
-    )
+      );
 
 const userSlice = createSlice({
     name:'user',
@@ -64,34 +113,30 @@ const userSlice = createSlice({
         builder
         .addCase(loginUser.pending,(state)=>{  //for login
             state.loading=true;
-            state.error = null;
-            state.message=null;
         })
         .addCase(loginUser.fulfilled,(state,action)=>{
             state.loading=false;
-            state.user=action.payload;
+            state.user=action.payload.user;
             state.isAuthenticated=true;
             state.message= action.payload.message ||"Login successfully"
         })
-        .addCase(loginUser.rejected,(state)=>{
+        .addCase(loginUser.rejected,(state,action)=>{
             state.loading = false;
             state.isAuthenticated=false;
-            state.error = "Invalid credentials";
+            state.error = action.payload as string;
         })
         .addCase(loadUser.pending,(state)=>{ //load user
             state.loading=true;
-            state.error = null;
-            state.message=null;
         })
         .addCase(loadUser.fulfilled,(state,action)=>{
             state.loading=false;
-            state.user=action.payload;
+            state.user=action.payload.user;
             state.isAuthenticated=true;
         })
-        .addCase(loadUser.rejected,(state)=>{
+        .addCase(loadUser.rejected,(state,action)=>{
             state.loading = false;
             state.isAuthenticated=false;
-            state.error = "Please login to access this resource";
+            state.error = action.payload as string;
         })
         .addCase(registerUser.pending,(state)=>{ //register user
             state.loading=true;
@@ -105,7 +150,7 @@ const userSlice = createSlice({
         })
         .addCase(registerUser.rejected,(state,action)=>{
             state.loading = false;
-            state.error = action.error.message || "an error occurd";
+            state.error = action.payload as string || "an error occurd";
         })
     },
 })

@@ -20,6 +20,16 @@ const s3 = new S3Client({
 exports.register = catchAsyncErrors(async (req, res, next) => {
   try {
     const { name, email, password, username } = req.body;
+    if(!name || !email || !password || !username){
+      const key = req.file.key;
+      const params = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: key,
+      };
+      await s3.send(new DeleteObjectCommand(params));
+
+      return next(new ErrorHandler("enter all fields",400))
+    }
     const userEmail = await User.findOne({ email });
     const userName = await User.findOne({ username });
 
@@ -31,7 +41,6 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
             Key: key,
         };
         await s3.send(new DeleteObjectCommand(params));
-        console.log("Object deleted successfully")
 
       return next(new ErrorHandler("User email already exists", 400));
     }
@@ -44,7 +53,6 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
             Key: key,
         };
         await s3.send(new DeleteObjectCommand(params));
-        console.log("Object deleted successfully")
 
       return next(new ErrorHandler("username already exists", 400));
     }
@@ -83,7 +91,6 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
                   Key: key,
               };
               await s3.send(new DeleteObjectCommand(params));
-              console.log("Object deleted successfully")
           }
         } catch (error) {
           console.log(error)
@@ -184,4 +191,17 @@ exports.logoutUser=catchAsyncErrors(async(req,res,next)=>{
  } catch (error) {
   return next(new ErrorHandler(error.message, 500));
  }
+})
+
+
+exports.getAllUsers=catchAsyncErrors(async(req,res,next)=>{
+  try {
+    const users = await User.find({});
+    res.status(200).json({
+      success:true,
+      users
+    })
+  } catch (error) {
+  return next(new ErrorHandler(error.message, 500));
+  }
 })

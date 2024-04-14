@@ -13,7 +13,7 @@ const LoginPage = () => {
     
 const [emailOrUsername,setEmailOrUsername]=useState('');
 const [password,setPassword]=useState('');
-const {loading,isAuthenticated} = useSelector((state: RootState) => state.user);
+const {isAuthenticated} = useSelector((state: RootState) => state.user);
 const navigate = useNavigate()
 
 
@@ -26,12 +26,11 @@ const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 useEffect(()=>{
   if(isAuthenticated){
     navigate('/')
-    console.log("first")
   }
 
 },[isAuthenticated,navigate])
   return (
-    <div>
+    <div className="w-full">
         
       {/* Login form */}
       <div className="flex flex-col gap-20 items-center justify-center border-[5px] border-gray-200 text-center h-screen px-5 md:px-0 w-full">
@@ -47,7 +46,7 @@ useEffect(()=>{
           <Input required className="h-[50px]" placeholder="Enter Your Email,Username" value={emailOrUsername} onChange={(e)=>setEmailOrUsername(e.target.value)} />
           <Input required className="h-[50px]" placeholder="Enter Your Password" value={password} onChange={(e)=>setPassword(e.target.value)}  />
           <div className="flex flex-col w-full gap-4">
-            <Button disabled={loading} type="submit" className=" h-[45px] text-[18px]">Login</Button>
+            <Button type="submit" className=" h-[45px] text-[18px]">Login</Button>
             <Link to={'/forgot_password'}className="text-[18px]  text-blue-400 font-bold">
               Forgotten Password ?
             </Link>

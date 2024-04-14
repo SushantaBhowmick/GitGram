@@ -22,10 +22,8 @@ import ProtectedRoute from "./Route/ProtectedRoute.tsx";
 import Sidebar from "./components/Home/Sidebar.tsx";
 
 function App() {
-  const error = useSelector((state: RootState) => state.user.error);
-  // const user = useSelector((state:RootState)=>state.user.error)
-  const message = useSelector((state: RootState) => state.user.message);
-
+  
+  const {message,error,isAuthenticated} = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
   if (error) {
@@ -44,13 +42,18 @@ function App() {
   return (
     <div className="flex w-full">
       <Router>
-        {/* sidebar */}
-        <div className=" hidden sm:block md:w-[8%] lg:w-[18%]">
-          <Sidebar />
-        </div>
-        <div className="fixed top-0 block sm:hidden w-full z-50">
-          <MobileHeader />
-        </div>
+        {isAuthenticated && (
+          <div className=" hidden sm:block md:w-[8%] lg:w-[18%]">
+            <Sidebar />
+          </div>
+        )}
+        {isAuthenticated && (
+          <div className="fixed top-0 block sm:hidden w-full z-50">
+            <MobileHeader />
+          </div>
+        )}
+
+        
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<LoginPage />} />

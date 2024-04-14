@@ -44,8 +44,8 @@ const Register = () => {
     }
   }, [isAuthenticated, navigate]);
   return (
-    <div>
-      {/* Login form */}
+    <div className=" w-full">
+      {/* Register form */}
       <div className="flex flex-col gap-5 items-center justify-center border-[5px] border-gray-200 text-center min-h-screen px-5 md:px-0 w-full">
         <div className="flex items-center gap-3 ">
           <h1 className="text-[25px] font-bold">GitGram</h1>

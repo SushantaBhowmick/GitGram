@@ -18,8 +18,9 @@ import { toast } from "react-toastify";
 const Sidebar = () => {
   const [active, setActive] = useState<number>(1);
   const {isAuthenticated} = useSelector((state: RootState) => state.user);
+  const {user} = useSelector((state: RootState) => state.user);
   const navigate= useNavigate()
-
+  
   const logoutHandler=async()=>{
     await axios.get(`${baseUrl}/user/logout`,{withCredentials:true})
     .then((res)=>{
@@ -102,8 +103,12 @@ const Sidebar = () => {
           to={"/profile"}
           className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===7 && "text-[red]"}`}
         >
-          <RxAvatar size={35} />
-          <span className=" text-[0px] lg:text-[18px]" >
+          {
+            user ?
+         <img src={user?.avatar} alt="" className="w-[35px] h-[35px] rounded-full object-cover" />
+         : <RxAvatar size={35} />
+          }
+           <span className=" text-[0px] lg:text-[18px]" >
           Profile
           </span>
         </Link>
