@@ -22,7 +22,7 @@ import ProtectedRoute from "./Route/ProtectedRoute.tsx";
 import Sidebar from "./components/Home/Sidebar.tsx";
 
 function App() {
-  
+
   const {message,error,isAuthenticated} = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
@@ -92,6 +92,7 @@ function App() {
         <div className="fixed bottom-0 block sm:hidden w-full">
           <MobileSidebar />
         </div>
+        
         <ToastContainer
           position="top-center"
           autoClose={5000}

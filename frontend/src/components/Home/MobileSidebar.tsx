@@ -10,9 +10,8 @@ import { RootState } from "../../app/store";
 
 const MobileSidebar = () => {
   const [active, setActive] = useState<number>(1);
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.user.isAuthenticated
-  );
+  const {user,isAuthenticated} = useSelector((state: RootState) => state.user);
+
     
   return (
    <div>
@@ -58,7 +57,11 @@ const MobileSidebar = () => {
         className={`flex items-center text-[18px] font-[500] gap-4 pl-5 ${active===5 ? "text-[red]":"text-white"}`}
 
       >
-        <RxAvatar size={35} />
+        {
+            user ?
+         <img src={user?.avatar} alt="" className="w-[35px] h-[35px] rounded-full object-cover" />
+         : <RxAvatar size={35} />
+          }
       </Link>
 
       </div>

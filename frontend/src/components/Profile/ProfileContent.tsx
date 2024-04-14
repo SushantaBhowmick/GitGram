@@ -8,16 +8,16 @@ const ProfileContent = () => {
 
   return (
   <>
-    <div className="mt-8">
+    <div className="mt-8 mx-2">
       {/* info */}
-      <div className="flex md:gap-32 gap-10 items-center ">
+      <div className="flex md:gap-32 gap-5 items-center ">
         <div className=" border rounded-full border-green-600">
           <img src={user?.avatar} alt="dp" className=" rounded-full h-[100px] w-[100px] md:h-[150px] md:w-[150px] object-cover" />
         </div>
 
         <div className="flex flex-col gap-5 ">
-          <div className="flex gap-3 items-center">
-          <h3 className="text-[22px]">{user?.username}</h3>
+          <div className="block sm:flex gap-3 items-center">
+          <h3 className="text-[22px] sm:mb-0 mb-2">{user?.username}</h3>
           <Button variant={'secondary'}>Edit Profile</Button>
           <Button variant={'secondary'}>View archived</Button>
           </div>
@@ -26,13 +26,20 @@ const ProfileContent = () => {
           <span className="!font-[500]">200 followers</span>
           <span className="!font-[500]">25 following</span>
         </div>
-        <div>
+        <div className="hidden sm:block">
           <h2 className="text-[18px] font-bold">{user?.name}</h2>
           <p className=" text-gray-600">if you not then who?</p>
           <p className=" text-gray-600">if not now then when?</p>
         </div>
         </div>
       </div>
+
+      <div className="mx-2 mt-3 block sm:hidden">
+          <h2 className="text-[18px] font-bold">{user?.name}</h2>
+          <p className=" text-gray-600">if you not then who?</p>
+          <p className=" text-gray-600">if not now then when?</p>
+        </div>
+
       <br />
       <br />
       {/* new post icon */}
