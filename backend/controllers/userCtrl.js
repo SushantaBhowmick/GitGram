@@ -168,6 +168,7 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
 exports.getUser=catchAsyncErrors(async(req,res,next)=>{
  try {
   const {id} = req.user;
+  console.log(id)
   const user = await User.findById(id);
   res.status(200).json({
     success:true,

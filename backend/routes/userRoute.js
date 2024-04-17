@@ -1,5 +1,4 @@
 const express = require('express');
-const { upload } = require('../utils/multer');
 const { register, activationAccount, login, getUser, logoutUser, getAllUsers } = require('../controllers/userCtrl');
 const { isAuthenticated } = require('../middlewares/auth');
 const uploadMiddleWare = require('../utils/multer');

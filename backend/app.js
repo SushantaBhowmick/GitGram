@@ -26,8 +26,10 @@ app.get('/',(req,res)=>{
 
 // import Routes
 const userRouter = require('./routes/userRoute');
+const postRouter = require('./routes/postRoutes');
 
 app.use("/api/v2/user",userRouter)
+app.use("/api/v2/post",postRouter)
 
 
 //error handler

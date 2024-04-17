@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
     ref: 'User', // Reference the User model
     required: true,
   },
-  text: {
+  caption: {
     type: String,
   },
   image: {
@@ -15,23 +15,23 @@ const postSchema = new mongoose.Schema({
   video: {
     type: String,
   },
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
-  dislikes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
+  likes: [  
+    { 
+     ln:{
+       type:Number,
+       default:0
+     },
+     user:{
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'User',
+     },
+   }
+   ],
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
-    },
+      ref:'Comment'
+    }
   ],
 }, { timestamps: true });
 
@@ -41,26 +41,34 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  post: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
+  },
   text: {
     type: String,
     required: true,
   },
-  likes: [
-    {
+  likes: [  
+   { 
+    ln:{
+      type:Number,
+      default:0
+    },
+    user:{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+  }
   ],
-  dislikes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
+  parentComment:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Comment'
+  },
   replies: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
+      ref:'Comment'
     },
   ],
 }, { timestamps: true });
@@ -70,7 +78,7 @@ const Comment = mongoose.model('Comment', commentSchema);
 
 // Define the Post model with populated comments
 postSchema.pre('find', async function (next) {
-  this.populate('comments');
+  this.populate('comments');  
   next();
 });
 
@@ -79,6 +87,16 @@ postSchema.pre('findOne', async function (next) {
   next();
 });
 
+// Define the Post model with populated comments
+commentSchema.pre('find', async function (next) {
+  this.populate('replies');  
+  next();
+});
+
+commentSchema.pre('findOne', async function (next) {
+  this.populate('replies');  
+  next();
+});
 // Define the Post model
 const Post = mongoose.model('Post', postSchema);
 
