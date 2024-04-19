@@ -16,14 +16,20 @@ import {
   clearMessage,
   loadUser,
 } from "./features/users/userSlice.ts";
+import {
+  clearError as postclearError,
+  clearMessage as postclearMessage
+} from "./features/posts/postsSlice.ts";
 import store, { RootState } from "./app/store.ts";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./Route/ProtectedRoute.tsx";
 import Sidebar from "./components/Home/Sidebar.tsx";
+import { getAllPost } from "./features/posts/postsSlice.ts";
 
 function App() {
 
   const {message,error,isAuthenticated} = useSelector((state: RootState) => state.user);
+  const {message:postmessage,error:postError} = useSelector((state: RootState) => state.post);
   const dispatch = useDispatch();
 
   if (error) {
@@ -35,8 +41,18 @@ function App() {
     dispatch(clearMessage());
   }
 
+  if (postError) {
+    toast.error(postError);
+    dispatch(postclearError());
+  }
+  if (postmessage) {
+    toast.success(postmessage);
+    dispatch(postclearMessage());
+  }
+
   useEffect(() => {
     store.dispatch(loadUser());
+    store.dispatch(getAllPost());
   }, []);
 
   return (
