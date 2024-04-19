@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const sendToken = require("../utils/sendToken");
 const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { Post } = require("../models/Post");
 
 // s3 upload
 const s3 = new S3Client({
@@ -201,6 +202,19 @@ exports.getAllUsers=catchAsyncErrors(async(req,res,next)=>{
     res.status(200).json({
       success:true,
       users
+    })
+  } catch (error) {
+  return next(new ErrorHandler(error.message, 500));
+  }
+})
+
+exports.getMyPosts=catchAsyncErrors(async(req,res,next)=>{
+  try {
+    const userId = req.user.id;
+    const posts = await Post.find({user:userId}).populate('comments')
+    res.status(200).json({
+      success:true,
+      posts
     })
   } catch (error) {
   return next(new ErrorHandler(error.message, 500));

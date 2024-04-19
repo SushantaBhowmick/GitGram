@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, activationAccount, login, getUser, logoutUser, getAllUsers } = require('../controllers/userCtrl');
+const { register, activationAccount, login, getUser, logoutUser, getAllUsers, getMyPosts } = require('../controllers/userCtrl');
 const { isAuthenticated } = require('../middlewares/auth');
 const uploadMiddleWare = require('../utils/multer');
 const router = express.Router();
@@ -10,5 +10,6 @@ router.route('/login').post(login)
 router.route('/me').get(isAuthenticated,getUser)
 router.route('/logout').get(isAuthenticated,logoutUser)
 router.route('/users').get(getAllUsers)
+router.route('/posts').get(isAuthenticated,getMyPosts)
 
 module.exports = router;

@@ -3,6 +3,11 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const { Post, Comment } = require("../models/Post");
 const User = require("../models/User");
 const ErrorHandler = require("../utils/ErrorHandler");
+const  mongoose  = require("mongoose");
+
+
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
+
 
 // s3 upload
 const s3 = new S3Client({
@@ -106,7 +111,8 @@ exports.addReply = catchAsyncErrors(async (req, res, next) => {
 // exports.getAllPosts=catchAsyncErrors(async(req,res,next)=>{
 //     try {
 
-//         const posts = await Post.find().populate('comments');
+//         const posts = await Post.find().populate('comments').lean()
+        
       
 //     res.status(200).json({
 //         success:true,
@@ -118,6 +124,7 @@ exports.addReply = catchAsyncErrors(async (req, res, next) => {
 //         return next(new ErrorHandler(error.message, 500));
 //     }
 // })
+
 
 // exports.getAllPosts = catchAsyncErrors(async (req, res, next) => {
 //     try {
@@ -131,6 +138,7 @@ exports.addReply = catchAsyncErrors(async (req, res, next) => {
   
 //         const commentTree = [];
 //         for (const comment of comments) {
+//             console.log(comment.replies)
 //           const nestedComments = buildCommentTree(comment.replies); // Recursive call for replies
 //           commentTree.push({ ...comment._doc, replies: nestedComments }); // Spread operator to avoid modifying original comment object
 //         }
@@ -152,32 +160,18 @@ exports.addReply = catchAsyncErrors(async (req, res, next) => {
 //     }
 //   });
 
-exports.getAllPosts = catchAsyncErrors(async (req, res) => {
-    try {
-        const posts = await Post.find().populate({
-            path: 'comments',
-            populate: [
-                {
-                    path: 'replies',
-                    populate: {
-                        path: 'user',
-                        select: '_id username'
-                    }
-                },
-                {
-                    path: 'user',
-                    select: '_id username'
-                }
-            ]
-        });
 
-        res.status(200).json({ success: true, posts });
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+exports.getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find().populate('comments')
+
+
+    res.status(200).json({ success: true, posts });
+} catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
 }
-)
+};
 
 exports.deletePost=catchAsyncErrors(async(req,res,next)=>{
     try {

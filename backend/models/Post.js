@@ -73,30 +73,58 @@ const commentSchema = new mongoose.Schema({
   ],
 }, { timestamps: true });
 
+
 // Define the Comment model
 const Comment = mongoose.model('Comment', commentSchema);
 
+
 // Define the Post model with populated comments
 postSchema.pre('find', async function (next) {
-  this.populate('comments');  
+  this.populate({
+      path: 'comments',
+      populate: {
+          path: 'replies',
+          populate: {
+              path: 'replies', 
+              populate: {
+                path: 'replies',
+                populate: {
+                  path: 'replies',
+                  populate: {
+                    path: 'replies',
+                  }
+                }
+              }
+          }
+      }
+  });
   next();
 });
 
 postSchema.pre('findOne', async function (next) {
-  this.populate('comments');
+  this.populate({
+      path: 'comments',
+      populate: {
+          path: 'replies',
+          populate: {
+              path: 'replies', 
+              populate: {
+                path: 'replies',
+                populate: {
+                  path: 'replies',
+                  populate: {
+                    path: 'replies',
+                  }
+                }
+              }
+          }
+      }
+  });
   next();
 });
 
-// Define the Post model with populated comments
-commentSchema.pre('find', async function (next) {
-  this.populate('replies');  
-  next();
-});
 
-commentSchema.pre('findOne', async function (next) {
-  this.populate('replies');  
-  next();
-});
+
 // Define the Post model
 const Post = mongoose.model('Post', postSchema);
 
