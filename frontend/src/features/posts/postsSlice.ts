@@ -47,11 +47,11 @@ export const newPost=createAsyncThunk(
 export const getAllPost=createAsyncThunk(
         'post/allPost',async(_,{rejectWithValue})=>{
           try {
-            const config = {
-                withCredentials:true,
-                headers: { "Content-Type": "application/json" }
-              }
-            const {data} = await axios.get(`${baseUrl}/post/all`,config);
+            // const config = {
+            //     headers: { "Content-Type": "application/json" }
+            //   }
+            const {data} = await axios.get(`${baseUrl}/post/all`,{
+              withCredentials:true});
             return data;
           } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
