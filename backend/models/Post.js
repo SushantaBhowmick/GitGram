@@ -101,6 +101,12 @@ postSchema.pre('find', async function (next) {
   next();
 });
 
+postSchema.pre('find', async function (next) {
+  this.populate('user'); // Populate the 'user' field before finding posts
+  next();
+});
+
+
 postSchema.pre('findOne', async function (next) {
   this.populate({
       path: 'comments',

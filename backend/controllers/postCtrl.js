@@ -163,7 +163,8 @@ exports.addReply = catchAsyncErrors(async (req, res, next) => {
 
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate('comments')
+    const posts = await Post.find()
+
 
 
     res.status(200).json({ success: true, posts });

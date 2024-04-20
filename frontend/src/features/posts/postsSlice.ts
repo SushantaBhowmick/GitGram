@@ -1,18 +1,14 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../service/service";
+import { Post } from "../../types/posts";
 
-interface Post {
-    caption:string;
-    image:string;
-    comment:string;
-}
 
 interface PostState{
     loading: boolean;
     error?: string | null;
     message?: string | null;
-    posts?:Post | null;
+    posts?:Post[];
     post?:Post | null;
 }
 
