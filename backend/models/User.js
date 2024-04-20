@@ -88,4 +88,10 @@ userSchema.methods.getJwtToken=function(){
     })
 }
 
+// userSchema.pre('find', async function (next) {
+//   this.populate('posts'); 
+//   next();
+// });
+
+
 module.exports = mongoose.model("User", userSchema);

@@ -213,10 +213,10 @@ exports.getAllUsers=catchAsyncErrors(async(req,res,next)=>{
 exports.getMyPosts=catchAsyncErrors(async(req,res,next)=>{
   try {
     const userId = req.user.id;
-    const posts = await Post.find({user:userId}).populate('comments')
+    const myPosts = await Post.find({user:userId}).populate('comments')
     res.status(200).json({
       success:true,
-      posts
+      myPosts
     })
   } catch (error) {
   return next(new ErrorHandler(error.message, 500));
@@ -225,13 +225,13 @@ exports.getMyPosts=catchAsyncErrors(async(req,res,next)=>{
 
 exports.getSingleUser=catchAsyncErrors(async(req,res,next)=>{
   try {
-    const user = await User.findById({_id:req.params.id})
-    if(!user){
+    const existsUser = await User.findById({_id:req.params.id}).populate('posts')
+    if(!existsUser){
       return next(new ErrorHandler("User not found",404));
     }
     res.status(200).json({
       success:true,
-      user
+      existsUser
     })
   } catch (error) {
   return next(new ErrorHandler(error.message, 500));

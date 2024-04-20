@@ -74,6 +74,12 @@ const commentSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
+
+commentSchema.pre('find', async function (next) {
+  this.populate('user'); // Populate the 'user' field before finding posts
+  next();
+});
+
 // Define the Comment model
 const Comment = mongoose.model('Comment', commentSchema);
 
@@ -105,6 +111,7 @@ postSchema.pre('find', async function (next) {
   this.populate('user'); // Populate the 'user' field before finding posts
   next();
 });
+  
 
 
 postSchema.pre('findOne', async function (next) {
