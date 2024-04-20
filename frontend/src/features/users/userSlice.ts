@@ -17,10 +17,14 @@ interface UserState{
     message?: string | null;
 }
 
-interface UserCredentials {
+interface LoginCredentials {
     id:string;
     emailOrUsername: string;
     password: string;
+}
+
+interface UserCredentials {
+    id:string;
 }
 
 const initialState:UserState={
@@ -29,7 +33,7 @@ const initialState:UserState={
 }
 
 export const loginUser = createAsyncThunk("user/loginUser",
-    async({emailOrUsername,password}:UserCredentials,{rejectWithValue})=>{
+    async({emailOrUsername,password}:LoginCredentials,{rejectWithValue})=>{
         try {
             const {data}=await axios.post(`${baseUrl}/user/login`,{emailOrUsername,password},{withCredentials:true});
             console.log(data)
