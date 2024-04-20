@@ -2,14 +2,16 @@ import { useSelector } from "react-redux";
 import store, { RootState } from "../../app/store";
 import { Button } from "../../@/components/ui/button";
 import { HiPlusSmall } from "react-icons/hi2";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { Textarea } from "../../@/components/ui/textarea";
 import { newPost } from "../../features/posts/postsSlice";
+import Posts from "../Posts/Posts";
+import { getMyPosts } from "../../features/users/userSlice";
 
 
 const ProfileContent = () => {
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user,myPosts } = useSelector((state: RootState) => state.user);
   const { loading } = useSelector((state: RootState) => state.post);
   const [open, setOpen] = useState(false);
   const [postOpen, setPostOpen] = useState(false);
@@ -37,9 +39,13 @@ const ProfileContent = () => {
     setPostOpen(false)
   }
 
+  useEffect(()=>{
+    store.dispatch(getMyPosts())
+  },[])
+
   return (
     <>
-      <div className="mt-8 mx-2">
+      <div className="mt-8 mx-2 h-[96vh] overflow-y-auto">
         {/* info */}
         <div className="flex md:gap-32 gap-5 items-center ">
           <div
@@ -108,9 +114,12 @@ const ProfileContent = () => {
 
         {/* posts */}
         <div className="mt-3">
-          <h3>Posts</h3>
+          <h3 className="text-center font-bold text-[25px] text-gray-400">My Posts</h3>
+          <Posts posts={myPosts} />
         </div>
       </div>
+
+
       {postOpen && (
         <div className="fixed w-full h-screen bg-[#000000de] top-0 left-0 z-50 flex items-center justify-center">
           <div className="w-[90%] 800px:w-[60%] h-[90vh] overflow-y-scroll 800px:h-[75vh] bg-gray-600 rounded-md shadow-sm relative p-4">
@@ -118,6 +127,7 @@ const ProfileContent = () => {
               size={30}
               className="absolute right-3 top-3 z-50"
               onClick={() => setPostOpen(false)}
+              cursor={'pointer'}
             />
 
             <h1 className=" text-center text-[30px] font-bold">New Post</h1>

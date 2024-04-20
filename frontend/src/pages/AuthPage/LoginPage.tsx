@@ -20,6 +20,9 @@ const navigate = useNavigate()
 const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   store.dispatch(loginUser({emailOrUsername,password}))
+  setTimeout(() => {
+    window.location.reload()
+  }, 2000);
 };
 
 

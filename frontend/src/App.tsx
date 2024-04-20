@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./Route/ProtectedRoute.tsx";
 import Sidebar from "./components/Home/Sidebar.tsx";
 import { getAllPost } from "./features/posts/postsSlice.ts";
+import FriendProfile from "./pages/FriendProfile.tsx";
 
 function App() {
 
@@ -99,6 +100,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MessagePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/:id"
+            element={
+              <ProtectedRoute>
+                <FriendProfile />
               </ProtectedRoute>
             }
           />

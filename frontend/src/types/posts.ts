@@ -1,4 +1,5 @@
 interface User {
+  _id:string;
   avatar:string;
   name:string;
   username:string;

@@ -9,6 +9,7 @@ interface PostState{
     error?: string | null;
     message?: string | null;
     posts?:Post[];
+    singlePost?:Post;
     post?:Post | null;
 }
 
@@ -65,6 +66,25 @@ export const getAllPost=createAsyncThunk(
           }
         }
       );
+    
+export const getAPost=createAsyncThunk(
+        'post/getAPost',async(id:string,{rejectWithValue})=>{
+          try {
+            const {data} = await axios.get(`${baseUrl}/post/${id}`,{
+              withCredentials:true});
+            return data;
+          } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+              if (error.response && error.response.data && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+              }
+              return rejectWithValue("An unknown error occurred");
+            }
+            // Handle non-Axios errors here
+            return rejectWithValue("An unknown error occurred");
+          }
+        }
+      );
 
 const postSlice = createSlice({
     name:'post',
@@ -79,7 +99,7 @@ const postSlice = createSlice({
     },
     extraReducers(builder) {
         builder
-        .addCase(newPost.pending,(state)=>{  
+        .addCase(newPost.pending,(state)=>{  //create post
             state.loading=true;
         })
         .addCase(newPost.fulfilled,(state,action)=>{
@@ -92,7 +112,7 @@ const postSlice = createSlice({
             state.error = action.payload as string;
         })
         
-        .addCase(getAllPost.pending,(state)=>{  
+        .addCase(getAllPost.pending,(state)=>{  //get all posts
             state.loading=true;
         })
         .addCase(getAllPost.fulfilled,(state,action)=>{
@@ -100,6 +120,18 @@ const postSlice = createSlice({
             state.posts=action.payload.posts;
         })
         .addCase(getAllPost.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload as string;
+        })
+        
+        .addCase(getAPost.pending,(state)=>{  // getAPost
+            state.loading=true;
+        })
+        .addCase(getAPost.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.singlePost=action.payload.singlePost;
+        })
+        .addCase(getAPost.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload as string;
         })

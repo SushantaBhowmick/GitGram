@@ -8,7 +8,6 @@ import React from 'react';
 const Content:React.FC = () => {
 
   const {posts}= useSelector((state: RootState) => state.post);
-  console.log(posts)
 
   return (
     <div className='h-screen overflow-y-scroll relative w-full justify-center items-center'>
