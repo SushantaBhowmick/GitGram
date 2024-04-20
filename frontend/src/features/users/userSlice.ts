@@ -18,14 +18,13 @@ interface UserState{
 }
 
 interface LoginCredentials {
-    id:string;
     emailOrUsername: string;
     password: string;
 }
 
-interface UserCredentials {
-    id:string;
-}
+// interface UserCredentials {
+//     id:string;
+// }
 
 const initialState:UserState={
     loading:false,
@@ -105,23 +104,23 @@ export const registerUser=createAsyncThunk(
 
   
 //get single User
-export const singleUser = createAsyncThunk("user/singleUser",
-async({id}:UserCredentials,{rejectWithValue})=>{
-    try {
-        const {data}=await axios.get(`${baseUrl}/user/${id}`,{withCredentials:true});
-        return data;
-    }catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          if (error.response && error.response.data && error.response.data.message) {
-            return rejectWithValue(error.response.data.message);
-          }
-          return rejectWithValue("An unknown error occurred");
-        }
-        // Handle non-Axios errors here
-        return rejectWithValue("An unknown error occurred");
-      }
-    }
-  );
+// export const singleUser = createAsyncThunk("user/singleUser",
+// async({id}:UserCredentials,{rejectWithValue})=>{
+//     try {
+//         const {data}=await axios.get(`${baseUrl}/user/${id}`,{withCredentials:true});
+//         return data;
+//     }catch (error: unknown) {
+//         if (axios.isAxiosError(error)) {
+//           if (error.response && error.response.data && error.response.data.message) {
+//             return rejectWithValue(error.response.data.message);
+//           }
+//           return rejectWithValue("An unknown error occurred");
+//         }
+//         // Handle non-Axios errors here
+//         return rejectWithValue("An unknown error occurred");
+//       }
+//     }
+//   );
 
 const userSlice = createSlice({
     name:'user',
@@ -175,17 +174,17 @@ const userSlice = createSlice({
             state.loading = false;
             state.error = action.payload as string || "an error occurd";
         })
-        .addCase(singleUser.pending,(state)=>{ //register user
-            state.loading=true;
-        })
-        .addCase(singleUser.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.user=action.payload;
-        })
-        .addCase(singleUser.rejected,(state,action)=>{
-            state.loading = false;
-            state.error = action.payload as string || "an error occurd";
-        })
+        // .addCase(singleUser.pending,(state)=>{ //register user
+        //     state.loading=true;
+        // })
+        // .addCase(singleUser.fulfilled,(state,action)=>{
+        //     state.loading=false;
+        //     state.user=action.payload;
+        // })
+        // .addCase(singleUser.rejected,(state,action)=>{
+        //     state.loading = false;
+        //     state.error = action.payload as string || "an error occurd";
+        // })
     },
 })
 
