@@ -11,12 +11,18 @@ interface PostState{
     posts?:Post[];
     singlePost?:Post;
     post?:Post | null;
+    comment?:Comment[]
 }
 
 // interface PostCredentials {
 //     caption: string;
 //     file: string;
 // }
+
+interface commentCredentials {
+    postId: string|undefined;
+    text: string;
+}
 
 const initialState:PostState={
     loading:false,
@@ -68,9 +74,28 @@ export const getAllPost=createAsyncThunk(
       );
     
 export const getAPost=createAsyncThunk(
-        'post/getAPost',async(id:string,{rejectWithValue})=>{
+        'post/getAPost',async(id:string|undefined,{rejectWithValue})=>{
           try {
             const {data} = await axios.get(`${baseUrl}/post/${id}`,{
+              withCredentials:true});
+            return data;
+          } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+              if (error.response && error.response.data && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+              }
+              return rejectWithValue("An unknown error occurred");
+            }
+            // Handle non-Axios errors here
+            return rejectWithValue("An unknown error occurred");
+          }
+        }
+      );
+    
+export const addComment=createAsyncThunk(
+        'post/addComment',async({postId,text}:commentCredentials,{rejectWithValue})=>{
+          try {
+            const {data} = await axios.put(`${baseUrl}/post/${postId}/comment`,{text},{
               withCredentials:true});
             return data;
           } catch (error: unknown) {
@@ -132,6 +157,20 @@ const postSlice = createSlice({
             state.singlePost=action.payload.singlePost;
         })
         .addCase(getAPost.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload as string;
+        })
+        
+        .addCase(addComment.pending,(state)=>{  // addComment
+            state.loading=true;
+        })
+        .addCase(addComment.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.message=action.payload.message;
+            state.post=action.payload.post;
+            state.comment=action.payload.comment;
+        })
+        .addCase(addComment.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload as string;
         })

@@ -68,6 +68,7 @@ exports.addComment = catchAsyncErrors(async (req, res, next) => {
       success: true,
       message: "Comment added successfully!",
       comment,
+      post
     });
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
