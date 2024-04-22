@@ -47,7 +47,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
         observer.unobserve(videoRef.current);
       }
     };
-  }, []);
+  }, [posts]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -235,7 +235,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
                     cursor={"pointer"}
                   />
                   {commentOpen && (
-                    <Comment setCommentOpen={setCommentOpen} post={post} />
+                    <Comment setCommentOpen={setCommentOpen} postId={post?._id} />
                   )}
                   <FaShareSquare size={27} />
                 </div>

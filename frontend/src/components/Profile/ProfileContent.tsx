@@ -34,7 +34,8 @@ const ProfileContent = () => {
     formData.append('caption',caption)
     formData.append('file',post as Blob)
 
-    store.dispatch(newPost(formData))
+    await store.dispatch(newPost(formData))
+    await store.dispatch(getMyPosts())
     setPost(null)
     setPostOpen(false)
   }

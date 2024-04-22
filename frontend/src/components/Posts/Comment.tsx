@@ -1,6 +1,5 @@
 
 import { RxCross1 } from "react-icons/rx";
-import { Post } from "../../types/posts";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +11,7 @@ import { CiMenuKebab } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { Input } from "../../@/components/ui/input";
 import { Button } from "../../@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import store, { RootState } from "../../app/store";
 import { toast } from "react-toastify";
 import { addComment, getAPost } from "../../features/posts/postsSlice";
@@ -20,13 +19,21 @@ import { useSelector } from "react-redux";
 
 interface CommentProps {
   setCommentOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  post: Post | undefined; // Assuming postId is of type string, adjust the type accordingly
+  postId: string | undefined; // Assuming postId is of type string, adjust the type accordingly
 }
 
-const Comment: React.FC<CommentProps> = ({ setCommentOpen, post }) => {
+const Comment: React.FC<CommentProps> = ({ setCommentOpen, postId }) => {
 
     const [commentData,setCommentData]=useState("")
     const {singlePost} = useSelector((state:RootState)=>state.post)
+    const comments = useSelector((state: RootState) =>state.post.singlePost?.comments || []);
+
+   const sortedComments = comments
+    ?.filter((c) => !!c) // Filter out any undefined posts
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
 
   function calculateTimeDifference(postCreatedAt: string): string | undefined {
     // Get current timestamp in milliseconds
@@ -65,20 +72,23 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, post }) => {
     return `${timeValue}${unit}${timeValue > 1 ? "" : ""} ago`;
   }
 
-  const submitComment=(e:React.FormEvent<HTMLFormElement>,postId:string|undefined)=>{
+  const submitComment=async(e:React.FormEvent<HTMLFormElement>,postId:string|undefined)=>{
         e.preventDefault();
         if(commentData===''||commentData===undefined||commentData===null){
             toast.warning("You can't send empty comment")
             return
         }
-        store.dispatch(addComment({postId,text:commentData}))
+        await store.dispatch(addComment({postId,text:commentData}))
         setCommentData('');
+        await store.dispatch(getAPost(postId));
   }
 
 
   useEffect(() => {
-   store.dispatch(getAPost(post?._id))
-  }, [singlePost])
+    if(postId){
+   store.dispatch(getAPost(postId))
+    }
+  }, [postId])
   
 
   return (
@@ -94,7 +104,7 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, post }) => {
         <div className=" w-full flex justify-center h-full p-1 gap-5">
           <div className=" hidden md:block lg:w-[50%]">
             <img
-              src={post?.image}
+              src={singlePost?.image}
               alt=""
               className=" w-full h-full rounded-sm"
             />
@@ -103,15 +113,15 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, post }) => {
             {/* header comment: title */}
             <div className="flex justify-between items-center py-3  border-b border-white ">
               <div className="flex items-center gap-3 ">
-                <Link to={`/user/${post?.user?._id}`}>
+                <Link to={`/user/${singlePost?.user?._id}`}>
                   <img
-                    src={post?.user?.avatar}
+                    src={singlePost?.user?.avatar}
                     alt=""
                     className="w-[35px] h-[35px] rounded-full object-cover"
                   />
                 </Link>
                 <div className="gap-2 flex ">
-                  <h1 className="text-[18px] font-bold">{post?.user?.name}</h1>
+                  <h1 className="text-[18px] font-bold">{singlePost?.user?.name}</h1>
                   {/* <span className=" text-gray-400">
                       .{calculateTimeDifference(item.createdAt)}
                     </span> */}
@@ -133,11 +143,11 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, post }) => {
               </div>
             </div>
             {/* caption */}
-            <div>
+            <div className="h-[70vh] overflow-y-auto p-2">
               <div className="flex items-center gap-3 mt-3">
-                <Link to={`/user/${post?.user?._id}`}>
+                <Link to={`/user/${singlePost?.user?._id}`}>
                   <img
-                    src={post?.user?.avatar}
+                    src={singlePost?.user?.avatar}
                     alt=""
                     className="w-[35px] h-[35px] rounded-full object-cover"
                   />
@@ -146,22 +156,22 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, post }) => {
                   <h1 className="text-[16px] font-[500]   ">
                     Caption :{" "}
                     <span className="font-[200] text-[14px]">
-                      {post?.caption}
+                      {singlePost?.caption}
                     </span>
                   </h1>
                   <span className=" text-gray-400">
-                    {/* .{calculateTimeDifference(post?.createdAt)} */}
+                    {/* .{calculateTimeDifference(singlePost?.createdAt)} */}
                   </span>
                 </div>
               </div>
 
               {/*comments  */}
-              <div className="h-[60vh] overflow-y-auto">
+              <div >
                 <h1 className=" text-gray-400 mt-5">Comments:</h1>
-                {singlePost &&
-                  singlePost.comments?.map((item, i) => (
+                {sortedComments.length!==0 ?
+                  sortedComments.map((item, i) => (
                     <div className="flex items-center gap-3 mt-3" key={i}>
-                      <Link to={`/user/${post?.user?._id}`}>
+                      <Link to={`/user/${singlePost?.user?._id}`}>
                         <img
                           src={item.user?.avatar}
                           alt=""
@@ -180,12 +190,16 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, post }) => {
                         </span>
                       </div>
                     </div>
-                  ))}
+                  ))
+                : <div className="flex items-center justify-center h-[50vh]">
+                  <h1 className="text-[25px] text-gray-400">No comments available</h1>
+                </div>
+                }
               </div>
             </div>
             {/* Add a comment */}
             <div className=" absolute w-full bottom-1 z-50 bg-gray-500 p-4">
-              <form className="flex items-center gap-2 " onSubmit={(e)=>submitComment(e,post?._id)}>
+              <form className="flex items-center gap-2 " onSubmit={(e)=>submitComment(e,singlePost?._id)}>
                 <Input
                   placeholder="write a comment"
                   className=" bg-gray-400 text-black font-[500] text-[16px] border-none placeholder:text-white"
