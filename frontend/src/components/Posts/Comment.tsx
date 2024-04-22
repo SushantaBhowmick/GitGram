@@ -25,7 +25,7 @@ interface CommentProps {
 const Comment: React.FC<CommentProps> = ({ setCommentOpen, postId }) => {
 
     const [commentData,setCommentData]=useState("")
-    const {singlePost} = useSelector((state:RootState)=>state.post)
+    const {singlePost,loading} = useSelector((state:RootState)=>state.post)
     const comments = useSelector((state: RootState) =>state.post.singlePost?.comments || []);
 
    const sortedComments = comments
@@ -83,11 +83,10 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, postId }) => {
         await store.dispatch(getAPost(postId));
   }
 
-
   useEffect(() => {
     if(postId){
    store.dispatch(getAPost(postId))
-    }
+  }
   }, [postId])
   
 
@@ -101,7 +100,12 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, postId }) => {
           cursor={"pointer"}
         />
         {/* <h1 className=" text-[25px] font-bold underline text-center">Comments</h1> */}
-        <div className=" w-full flex justify-center h-full p-1 gap-5">
+        {
+          loading? 
+         ( <div className="flex items-center justify-center h-[80vh]">
+            <h1 className=" text-[25px] text-gray-400">Loading...</h1>
+          </div>) :
+        (<div className=" w-full flex justify-center h-full p-1 gap-5">
           <div className=" hidden md:block lg:w-[50%]">
             <img
               src={singlePost?.image}
@@ -210,7 +214,8 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, postId }) => {
               </form>   
             </div>
           </div>
-        </div>
+        </div>)
+        }
       </div>
     </div>
   );

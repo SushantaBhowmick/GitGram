@@ -3,6 +3,7 @@ import SuggestFriend from '../components/Home/SuggestFriend'
 import Message from '../components/Messages/Message'
 
 const MessagePage = () => {
+
   return (
    <>
    

@@ -48,7 +48,7 @@ const ProfileContent = () => {
     <>
       <div className="mt-8 mx-2 h-[96vh] overflow-y-auto">
         {/* info */}
-        <div className="flex md:gap-32 gap-5 items-center ">
+        <div className="flex md:gap-32 gap-5 items-center flex-wrap  justify-center ">
           <div
             className=" border rounded-full border-green-600"
             onClick={handleView}
@@ -77,13 +77,15 @@ const ProfileContent = () => {
           <div className="flex flex-col gap-5 ">
             <div className="block sm:flex gap-3 items-center">
               <h3 className="text-[22px] sm:mb-0 mb-2">{user?.username}</h3>
+              <div className="flex gap-3">
               <Button variant={"secondary"}>Edit Profile</Button>
               <Button variant={"secondary"}>View archived</Button>
+              </div>
             </div>
-            <div className="flex gap-10 items-start  text-[#443bb4]">
-              <span className="!font-[500]">25 posts</span>
-              <span className="!font-[500]">200 followers</span>
-              <span className="!font-[500]">25 following</span>
+            <div className="flex gap-3 md:gap-10 items-start  text-[#443bb4]">
+              <span className="!font-[500]">25 <br /> posts</span>
+              <span className="!font-[500]">200 <br /> followers</span>
+              <span className="!font-[500]">25 <br />following</span>
             </div>
             <div className="hidden sm:block">
               <h2 className="text-[18px] font-bold">{user?.name}</h2>

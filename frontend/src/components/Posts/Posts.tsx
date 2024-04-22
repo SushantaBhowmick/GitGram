@@ -234,9 +234,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
                     onClick={() => handleCommentOpen(item)}
                     cursor={"pointer"}
                   />
-                  {commentOpen && (
-                    <Comment setCommentOpen={setCommentOpen} postId={post?._id} />
-                  )}
+                 
                   <FaShareSquare size={27} />
                 </div>
                 <div>
@@ -247,6 +245,9 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
 
             </div>
           ))}
+           {commentOpen && (
+                    <Comment setCommentOpen={setCommentOpen} postId={post?._id} />
+                  )}
       </div>
     </div>
   );
