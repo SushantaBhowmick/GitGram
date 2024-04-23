@@ -8,6 +8,7 @@ const {
   getAllUsers,
   getMyPosts,
   getSingleUser,
+  followOrUnfollowUser,
 } = require("../controllers/userCtrl");
 const { isAuthenticated } = require("../middlewares/auth");
 const uploadMiddleWare = require("../utils/multer");
@@ -21,5 +22,6 @@ router.route("/logout").get(isAuthenticated, logoutUser);
 router.route("/users").get(getAllUsers);
 router.route("/posts").get(isAuthenticated, getMyPosts);
 router.route("/:id").get(isAuthenticated, getSingleUser);
+router.route("/:id/follow").get(isAuthenticated, followOrUnfollowUser);
 
 module.exports = router;

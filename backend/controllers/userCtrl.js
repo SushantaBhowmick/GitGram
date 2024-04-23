@@ -67,7 +67,8 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
     };
 
     const activationToken = createActivationToken(user);
-    const activationUrl = `http://localhost:5173/activation/${activationToken}`;
+    // const activationUrl = `http://localhost:5173/activation/${activationToken}`;
+    const activationUrl = `https://git-gram.vercel.app/activation/${activationToken}`;
 
     try {
       await sendMail({
@@ -233,6 +234,45 @@ exports.getSingleUser=catchAsyncErrors(async(req,res,next)=>{
       success:true,
       existsUser
     })
+  } catch (error) {
+  return next(new ErrorHandler(error.message, 500));
+  }
+})
+
+exports.followOrUnfollowUser=catchAsyncErrors(async(req,res,next)=>{
+  try {
+    const userToFollow = await User.findById(req.params.id);
+    const loggedInUser = await User.findById(req.user.id);
+
+    if(!userToFollow){
+      return next(new ErrorHandler("User not found",404));
+    }
+    if(loggedInUser.following.includes(userToFollow._id)){
+      const indexOfFollowing = loggedInUser.following.indexOf(userToFollow._id);
+      const indexOfFollowers = userToFollow.followers.indexOf(loggedInUser._id);
+
+      loggedInUser.following.splice(indexOfFollowing,1);
+      userToFollow.followers.splice(indexOfFollowers,1);
+
+      await loggedInUser.save();
+      await userToFollow.save();
+
+      res.status(200).json({
+        success:true,
+        message:"User Unfollwed"
+      })
+    }else{
+      loggedInUser.following.push(userToFollow._id);
+      userToFollow.followers.push(loggedInUser._id);
+
+      await loggedInUser.save();
+      await userToFollow.save();
+
+      res.status(200).json({
+        success:true,
+        message: "User followed"
+      })
+    }
   } catch (error) {
   return next(new ErrorHandler(error.message, 500));
   }

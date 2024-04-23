@@ -68,7 +68,7 @@ exports.addComment = catchAsyncErrors(async (req, res, next) => {
       success: true,
       message: "Comment added successfully!",
       comment,
-      post
+      post,
     });
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
@@ -213,3 +213,30 @@ exports.deletePost = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 500));
   }
 });
+
+// likes a post
+exports.likeOrUnlikePost = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return next(new ErrorHandler("Post not found!", 404));
+    }
+
+    if (post.likes.includes(userId)) {
+      const index = post.likes.indexOf(userId);
+      post.likes.splice(index, 1);
+      await post.save();
+
+      res.status(200).json({ success: true, message: "Post Unliked" });
+    } else {
+      post.likes.push(userId);
+      await post.save();
+
+      res.status(200).json({ success: true, message: "Post liked" });
+    }
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
