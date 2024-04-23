@@ -175,6 +175,32 @@ export const getMyPosts = createAsyncThunk(
   }
 );
 
+// Follow or unfollow user
+export const followOrUnfollowUser = createAsyncThunk(
+  "user/followOrUnfollowUser",
+  async (id:string, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${baseUrl}/user/${id}/follow`, {
+        withCredentials: true,
+      });
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          return rejectWithValue(error.response.data.message);
+        }
+        return rejectWithValue("An unknown error occurred");
+      }
+      // Handle non-Axios errors here
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -188,8 +214,7 @@ const userSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(loginUser.pending, (state) => {
-        //for login
+      .addCase(loginUser.pending, (state) => {//for login
         state.loading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
@@ -204,8 +229,7 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      .addCase(loadUser.pending, (state) => {
-        //load user
+      .addCase(loadUser.pending, (state) => {//load user
         state.loading = true;
       })
       .addCase(loadUser.fulfilled, (state, action) => {
@@ -219,8 +243,7 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      .addCase(registerUser.pending, (state) => {
-        //register user
+      .addCase(registerUser.pending, (state) => { //register user
         state.loading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
@@ -233,8 +256,7 @@ const userSlice = createSlice({
         state.error = (action.payload as string) || "an error occurd";
       })
 
-      .addCase(singleUser.pending, (state) => {
-        //singleUser
+      .addCase(singleUser.pending, (state) => { //singleUser
         state.loading = true;
       })
       .addCase(singleUser.fulfilled, (state, action) => {
@@ -246,8 +268,7 @@ const userSlice = createSlice({
         state.error = (action.payload as string) || "an error occurd";
       })
 
-      .addCase(getMyPosts.pending, (state) => {
-        //getMyPosts
+      .addCase(getMyPosts.pending, (state) => { //getMyPosts
         state.loading = true;
       })
       .addCase(getMyPosts.fulfilled, (state, action) => {
@@ -257,7 +278,19 @@ const userSlice = createSlice({
       .addCase(getMyPosts.rejected, (state, action) => {
         state.loading = false;
         state.error = (action.payload as string) || "an error occurd";
-      });
+      })
+
+      .addCase(followOrUnfollowUser.pending, (state) => { //followOrUnfollowUser
+        state.loading = true;
+      })
+      .addCase(followOrUnfollowUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(followOrUnfollowUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) || "an error occurd";
+      })
   },
 });
 

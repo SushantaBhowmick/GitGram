@@ -7,11 +7,12 @@ import { RxCross1 } from "react-icons/rx";
 import { Textarea } from "../../@/components/ui/textarea";
 import { newPost } from "../../features/posts/postsSlice";
 import Posts from "../Posts/Posts";
-import { getMyPosts } from "../../features/users/userSlice";
+import { getMyPosts, loadUser } from "../../features/users/userSlice";
+import Loader from "../layout/Loader";
 
 
 const ProfileContent = () => {
-  const { user,myPosts } = useSelector((state: RootState) => state.user);
+  const { user,myPosts,loading:userLoading } = useSelector((state: RootState) => state.user);
   const { loading } = useSelector((state: RootState) => state.post);
   const [open, setOpen] = useState(false);
   const [postOpen, setPostOpen] = useState(false);
@@ -42,13 +43,22 @@ const ProfileContent = () => {
 
   useEffect(()=>{
     store.dispatch(getMyPosts())
+    store.dispatch(loadUser())
   },[])
 
   return (
     <>
-      <div className="mt-8 mx-2 h-[96vh] overflow-y-auto">
+      <div className="mt-8 h-[96vh] overflow-y-auto">
         {/* info */}
-        <div className="flex md:gap-32 gap-5 items-center flex-wrap  justify-center ">
+           {
+            userLoading? 
+            ( <div className="flex items-center justify-center h-[80vh]">
+             <Loader />
+               {/* <h1 className=" text-[25px] text-gray-400">Loading...</h1> */}
+             </div>) 
+            :
+            <>
+              <div className="flex md:gap-32 gap-5 items-center flex-wrap  justify-center ">
           <div
             className=" border rounded-full border-green-600"
             onClick={handleView}
@@ -82,10 +92,10 @@ const ProfileContent = () => {
               <Button variant={"secondary"}>View archived</Button>
               </div>
             </div>
-            <div className="flex gap-3 md:gap-10 items-start  text-[#443bb4]">
-              <span className="!font-[500]">25 <br /> posts</span>
-              <span className="!font-[500]">200 <br /> followers</span>
-              <span className="!font-[500]">25 <br />following</span>
+            <div className="flex gap-5 md:gap-10 items-start  text-[#443bb4]">
+              <span className="!font-[500] text-center">{user?.posts?.length} <br /> posts</span>
+              <span className="!font-[500] text-center">{user?.followers?.length} <br /> followers</span>
+              <span className="!font-[500] text-center">{user?.following?.length} <br />following</span>
             </div>
             <div className="hidden sm:block">
               <h2 className="text-[18px] font-bold">{user?.name}</h2>
@@ -106,7 +116,7 @@ const ProfileContent = () => {
         {/* new post icon */}
         <div
           title="New Post"
-          className=" mb-10 border border-gray-500 rounded-full flex items-center justify-center"
+          className=" mb-10 border mx-2 border-gray-500 rounded-full flex items-center justify-center"
           onClick={() => setPostOpen(true)}
         >
           <HiPlusSmall size={40} />
@@ -116,10 +126,13 @@ const ProfileContent = () => {
         <div className="border w-full xl:w-[900px]"></div>
 
         {/* posts */}
-        <div className="mt-3">
+        <div className="mt-3 w-full">
           <h3 className="text-center font-bold text-[25px] text-gray-400">My Posts</h3>
           <Posts posts={myPosts} />
         </div>
+            </>
+        }
+      
       </div>
 
 

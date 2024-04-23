@@ -110,6 +110,25 @@ export const addComment=createAsyncThunk(
           }
         }
       );
+    
+export const likeOrUnlike=createAsyncThunk(
+        'post/likeOrUnlike',async(id:string,{rejectWithValue})=>{
+          try {
+            const {data} = await axios.get(`${baseUrl}/post/${id}/like`,{
+              withCredentials:true});
+            return data;
+          } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+              if (error.response && error.response.data && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+              }
+              return rejectWithValue("An unknown error occurred");
+            }
+            // Handle non-Axios errors here
+            return rejectWithValue("An unknown error occurred");
+          }
+        }
+      );
 
 const postSlice = createSlice({
     name:'post',
@@ -171,6 +190,18 @@ const postSlice = createSlice({
             state.comment=action.payload.comment;
         })
         .addCase(addComment.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload as string;
+        })
+        
+        .addCase(likeOrUnlike.pending,(state)=>{  // like & unlike
+            state.loading=true;
+        })
+        .addCase(likeOrUnlike.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.message=action.payload.message;
+        })
+        .addCase(likeOrUnlike.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload as string;
         })

@@ -16,6 +16,7 @@ import store, { RootState } from "../../app/store";
 import { toast } from "react-toastify";
 import { addComment, getAPost } from "../../features/posts/postsSlice";
 import { useSelector } from "react-redux";
+import Loader from "../layout/Loader";
 
 interface CommentProps {
   setCommentOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -91,7 +92,7 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, postId }) => {
   
 
   return (
-    <div className="fixed w-full h-screen bg-[#00000030] top-0 left-0 z-50 flex items-center justify-center ">
+    <div className="fixed w-full h-screen bg-[#000000ae] top-0 left-0 z-50 flex items-center justify-center">
       <div className="w-[90%] sm:w-[80%] 800px:w-[60%] h-[90vh] overflow-y-scroll 800px:h-[75vh] bg-gray-600 rounded-md shadow-sm relative p-4">
         <RxCross1
           size={30}
@@ -103,7 +104,8 @@ const Comment: React.FC<CommentProps> = ({ setCommentOpen, postId }) => {
         {
           loading? 
          ( <div className="flex items-center justify-center h-[80vh]">
-            <h1 className=" text-[25px] text-gray-400">Loading...</h1>
+          <Loader />
+            {/* <h1 className=" text-[25px] text-gray-400">Loading...</h1> */}
           </div>) :
         (<div className=" w-full flex justify-center h-full p-1 gap-5">
           <div className=" hidden md:block lg:w-[50%]">

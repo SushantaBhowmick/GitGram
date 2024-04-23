@@ -3,6 +3,7 @@ interface User {
   avatar:string;
   name:string;
   username:string;
+  likes:[];
 }
 export interface Comment {
   _id:string;

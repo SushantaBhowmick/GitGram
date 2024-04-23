@@ -8,12 +8,16 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { CiMenuKebab } from "react-icons/ci";
 import { MdSaveAlt } from "react-icons/md";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaRegHeart, FaShareSquare } from "react-icons/fa";
 import { TbMessageCirclePlus } from "react-icons/tb";
 import React, { useEffect, useRef, useState } from "react";
 import { Post } from "../../types/posts";
 import { Link } from "react-router-dom";
 import Comment from "./Comment";
+import { useSelector } from "react-redux";
+import store, { RootState } from "../../app/store";
+import { getAllPost, likeOrUnlike } from "../../features/posts/postsSlice";
 
 interface PostsProps {
   posts: Post[] | undefined;
@@ -21,6 +25,7 @@ interface PostsProps {
 
 const Posts: React.FC<PostsProps> = ({ posts }) => {
   const [commentOpen, setCommentOpen] = useState(false);
+  const { user } = useSelector((state: RootState) => state.user);
   const [post, setPost] = useState<Post>();
 
   const [isInView, setIsInView] = useState(false);
@@ -103,13 +108,18 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
     return `${timeValue}${unit}${timeValue > 1 ? "" : ""} ago`;
   }
 
-  const handleCommentOpen=(item:Post)=>{
-    setCommentOpen(true)
-    setPost(item)
-  }
+  const handleCommentOpen = (item: Post) => {
+    setCommentOpen(true);
+    setPost(item);
+  };
+
+  const likeHandler = async(id: string) => {
+      await store.dispatch(likeOrUnlike(id))
+      await store.dispatch(getAllPost());
+  };
 
   return (
-    <div className="w-[100%] flex justify-center py-3 mb-12">
+    <div className={`w-[100%] flex justify-center py-3 mb-12 `}>
       <div className="w-[98%] md:w-[75%]">
         {/* post card */}
 
@@ -212,9 +222,10 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
               </div>
               <div className="ml-1 mb-2 w-full">
                 <span className="text-[16px] font-[500] font-serif text-break">
-                  {item.caption.length < 40
-                    ? item.caption + "..."
-                    : item.caption.slice(0, 40) + " see more"}
+                  {item.caption.length > 50
+                    ? item.caption.slice(0, 50) + "..."
+                    : item.caption 
+                  }
                 </span>
               </div>
 
@@ -227,27 +238,46 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
                 />
               </div>
               <div className="flex justify-between mt-0 py-2">
-                <div className="flex gap-4">
-                  <FaRegHeart size={27} />
-                 <TbMessageCirclePlus
+                <div className="flex gap-4 ml-2">
+                  {item.likes?.find((like) => like === user?._id) ? (
+                    <AiFillHeart 
+                    size={27} 
+                    color="crimson"
+                    onClick={()=>likeHandler(item._id)}
+                    cursor={'pointer'}
+                    />
+                  ) : (
+                    <AiOutlineHeart 
+                    size={27} 
+                    onClick={()=>likeHandler(item._id)}
+                    cursor={'pointer'}
+                    />
+                  )}
+                  <TbMessageCirclePlus
                     size={27}
                     onClick={() => handleCommentOpen(item)}
                     cursor={"pointer"}
+                    className=" text-gray-400"
                   />
-                 
-                  <FaShareSquare size={27} />
+
+                  <FaShareSquare size={24} 
+                    className=" text-gray-400"
+                  />
                 </div>
                 <div>
-                  <MdSaveAlt size={27} />
+                  <MdSaveAlt size={27}
+                    className=" text-gray-400"
+                  />
                 </div>
               </div>
-              <h1 className=" text-[18px] font-bold py-2">256 Likes</h1>
-
+              <h1 className=" text-[16px] font-bold py-2 text-gray-500">
+                {item.likes?.length} Likes
+              </h1>
             </div>
           ))}
-           {commentOpen && (
-                    <Comment setCommentOpen={setCommentOpen} postId={post?._id} />
-                  )}
+        {commentOpen && (
+          <Comment setCommentOpen={setCommentOpen} postId={post?._id} />
+        )}
       </div>
     </div>
   );

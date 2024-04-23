@@ -8,4 +8,6 @@ export interface User {
   name: string;
   myPosts?: Post[];
   posts?:Post[]
+  following:[];
+  followers:[];
 }
